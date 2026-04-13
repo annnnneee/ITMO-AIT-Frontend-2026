@@ -120,17 +120,20 @@
 
 @media (max-width: 768px) {
     .terminal-table {
-        display: block !important;
+        display: block;
         width: 100%;
         overflow-x: auto;
     }
 
-    .terminal-table thead, .terminal-table tbody {
+    #searchTable thead, #searchTable tbody,
+    .col-md-8 .terminal-table thead, .col-md-8 .terminal-table tbody {
         display: table;
         width: 100%;
+        min-width: 650px;
     }
 
-    .col-md-8 .terminal-table thead, .col-md-8 .terminal-table tbody, #searchTable thead, #searchTable tbody {
-        min-width: 650px;
+    .terminal-table th, .terminal-table td {
+        width: 20%;
+        min-width: 100px;
     }
 }
