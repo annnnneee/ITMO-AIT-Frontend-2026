@@ -31,10 +31,12 @@
               <tr v-if="financeStore.accounts.length === 0">
                 <td colspan="2" style="text-align:center;">[ СЧЕТА_НЕ_СОЗДАНЫ ]</td>
               </tr>
-              <tr v-for="acc in financeStore.accounts" :key="acc.id">
-                <td>{{ acc.name }}</td>
-                <td>{{ acc.balance.toFixed(2) }}</td>
-              </tr>
+              <AccountRow
+                  v-for="acc in financeStore.accounts"
+                  :key="acc.id"
+                  :name="acc.name"
+                  :balance="acc.balance"
+              />
               </tbody>
             </table>
             <button class="terminal-btn" @click="isAccModalOpen = true">[ + НОВЫЙ_СЧЁТ ]</button>
@@ -59,15 +61,11 @@
               <tr v-if="financeStore.transactions.length === 0">
                 <td colspan="5" style="text-align:center;">[ ОПЕРАЦИЙ_НЕТ ]</td>
               </tr>
-              <tr v-for="tx in recentTransactions" :key="tx.id">
-                <td>{{ tx.date }}</td>
-                <td>{{ tx.account }}</td>
-                <td>{{ tx.desc || '-' }}</td>
-                <td>{{ tx.category }}</td>
-                <td :class="tx.sum > 0 ? 'text-income' : 'text-expense'">
-                  {{ tx.sum > 0 ? '+' : '' }}{{ tx.sum.toFixed(2) }}
-                </td>
-              </tr>
+              <TransactionRow
+                  v-for="tx in recentTransactions"
+                  :key="tx.id"
+                  :tx="tx"
+              />
               </tbody>
             </table>
             <button class="terminal-btn" @click="openTxModal">[ + ДОБАВИТЬ_ТРАНЗАКЦИЮ ]</button>
@@ -79,43 +77,33 @@
         <h2 class="block-title">&gt; КУРСЫ_ВАЛЮТ</h2>
         <div class="row g-2 mb-2" v-if="rates.USD">
           <div class="col-12">
-            <div class="currency-card">
-              <div class="currency-card-header">{{ rates.USD.Name.toUpperCase() }}</div>
-              <div class="currency-card-body">
-                <svg class="icon">
-                  <use :href="'/sprite.svg#icon-usd'"></use>
-                </svg>
-                <span>USD: {{ rates.USD.Value.toFixed(2) }}</span>
-              </div>
-            </div>
+            <CurrencyCard
+                code="USD"
+                :name="rates.USD.Name"
+                :value="rates.USD.Value"
+            />
           </div>
         </div>
 
         <div class="row g-2 mb-2">
           <div v-for="code in ['EUR', 'CNY', 'GBP']" :key="code" class="col-md-4">
-            <div class="currency-card" v-if="rates[code]">
-              <div class="currency-card-header">{{ rates[code].Name.toUpperCase() }}</div>
-              <div class="currency-card-body">
-                <svg class="icon">
-                  <use :href="`/sprite.svg#icon-${code.toLowerCase()}`"></use>
-                </svg>
-                <span>{{ code }}: {{ rates[code].Value.toFixed(2) }}</span>
-              </div>
-            </div>
+            <CurrencyCard
+                v-if="rates[code]"
+                :code="code"
+                :name="rates[code].Name"
+                :value="rates[code].Value"
+            />
           </div>
         </div>
 
         <div class="row g-2">
           <div v-for="code in ['TRY', 'KZT', 'BYN', 'AED']" :key="code" class="col-md-3">
-            <div class="currency-card" v-if="rates[code]">
-              <div class="currency-card-header">{{ rates[code].Name.toUpperCase() }}</div>
-              <div class="currency-card-body">
-                <svg class="icon">
-                  <use :href="`/sprite.svg#icon-${code.toLowerCase()}`"></use>
-                </svg>
-                <span>{{ code }}: {{ rates[code].Value.toFixed(2) }}</span>
-              </div>
-            </div>
+            <CurrencyCard
+                v-if="rates[code]"
+                :code="code"
+                :name="rates[code].Name"
+                :value="rates[code].Value"
+            />
           </div>
         </div>
       </div>
@@ -204,6 +192,9 @@ import {useFinanceStore} from '../stores/finance'
 import {financeApi} from '../api'
 import {useExchangeRates} from '../composables/useExchangeRates'
 import {useAuth} from '../composables/useAuth'
+import AccountRow from "@/components/AccountRow.vue";
+import TransactionRow from "@/components/TransactionRow.vue";
+import CurrencyCard from "@/components/CurrencyCard.vue";
 
 const financeStore = useFinanceStore()
 

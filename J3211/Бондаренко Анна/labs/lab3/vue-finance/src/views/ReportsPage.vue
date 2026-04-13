@@ -65,27 +65,25 @@
         <div class="col-md-6">
           <div class="dashboard-block">
             <h2 class="block-title">&gt; АНАЛИЗ_ДОХОДОВ</h2>
-            <div v-for="(val, cat) in stats.incByCat" :key="cat" class="mb-2">
-              <span>{{ cat }}</span>
-              <div class="progress" style="height:20px;">
-                <div class="progress-bar bg-income" :style="{ width: Math.round(val/stats.income*100) + '%' }">
-                  {{ Math.round(val / stats.income * 100) }}%
-                </div>
-              </div>
-            </div>
+            <StatProgressBar
+                v-for="(val, cat) in stats.incByCat"
+                :key="cat"
+                :label="cat"
+                :percent="Math.round(val/stats.income*100)"
+                colorClass="bg-income"
+            />
           </div>
         </div>
         <div class="col-md-6">
           <div class="dashboard-block">
             <h2 class="block-title">&gt; АНАЛИЗ_РАСХОДОВ</h2>
-            <div v-for="(val, cat) in stats.expByCat" :key="cat" class="mb-2">
-              <span>{{ cat }}</span>
-              <div class="progress" style="height:20px;">
-                <div class="progress-bar bg-expense" :style="{ width: Math.round(val/stats.expense*100) + '%' }">
-                  {{ Math.round(val / stats.expense * 100) }}%
-                </div>
-              </div>
-            </div>
+            <StatProgressBar
+                v-for="(val, cat) in stats.expByCat"
+                :key="cat"
+                :label="cat"
+                :percent="Math.round(val/stats.expense*100)"
+                colorClass="bg-expense"
+            />
           </div>
         </div>
       </div>
@@ -99,6 +97,7 @@ import Chart from 'chart.js/auto'
 import BaseLayout from '../layouts/BaseLayout.vue'
 import {useFinanceStore} from '../stores/finance'
 import {useAuthStore} from '../stores/auth'
+import StatProgressBar from "@/components/StatProgressBar.vue";
 
 const financeStore = useFinanceStore()
 const authStore = useAuthStore()

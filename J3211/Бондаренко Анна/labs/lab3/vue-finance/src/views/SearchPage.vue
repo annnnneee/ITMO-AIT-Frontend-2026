@@ -63,15 +63,11 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="tx in filteredTransactions" :key="tx.id">
-            <td>{{ formatDate(tx.date) }}</td>
-            <td>{{ tx.account }}</td>
-            <td>{{ tx.desc || '-' }}</td>
-            <td>{{ tx.category }}</td>
-            <td :class="tx.sum > 0 ? 'text-income' : 'text-expense'">
-              {{ tx.sum > 0 ? '+' : '' }}{{ tx.sum.toFixed(2) }}
-            </td>
-          </tr>
+          <TransactionRow
+              v-for="tx in filteredTransactions"
+              :key="tx.id"
+              :tx="tx"
+          />
           </tbody>
         </table>
         <div v-else role="status">[ СОВПАДЕНИЙ_0 ]</div>
@@ -85,6 +81,7 @@ import {ref, computed, onMounted} from 'vue'
 import BaseLayout from '../layouts/BaseLayout.vue'
 import {useFinanceStore} from '../stores/finance'
 import {useAuthStore} from '../stores/auth'
+import TransactionRow from "@/components/TransactionRow.vue";
 
 const financeStore = useFinanceStore()
 const authStore = useAuthStore()
@@ -100,11 +97,6 @@ const filters = ref({
 })
 
 onMounted(() => financeStore.loadAllData(authStore.userId))
-const formatDate = (dateStr) => {
-  if (!dateStr) return '-'
-  const [y, m, d] = dateStr.split('-')
-  return `${d}.${m}.${y}`
-}
 
 const filteredTransactions = computed(() => {
   return financeStore.transactions.filter(tx => {

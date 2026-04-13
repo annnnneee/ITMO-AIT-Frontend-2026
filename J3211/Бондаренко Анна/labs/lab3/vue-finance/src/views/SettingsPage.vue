@@ -55,18 +55,24 @@
           <div class="dashboard-block h-100 d-flex flex-column">
             <h2 class="block-title">&gt; СПИСОК_ПРАВИЛ</h2>
             <div style="flex: 1; max-height: 250px; overflow-y: auto; margin-bottom: 20px;">
-              <div v-for="rule in financeStore.rules" :key="rule.id" class="item-row">
+              <SettingsItem
+                  v-for="rule in financeStore.rules"
+                  :key="rule.id"
+                  @delete="removeRule(rule.id)"
+              >
                 <span>"{{ rule.triggerWord }}" &rarr; <b>{{ rule.category }}</b></span>
-                <button class="delete-btn" @click="removeRule(rule.id)">[ X ]</button>
-              </div>
+              </SettingsItem>
             </div>
 
             <h2 class="block-title">&gt; СПИСОК_КАТЕГОРИЙ</h2>
             <div style="flex: 1; max-height: 250px; overflow-y: auto;">
-              <div v-for="cat in financeStore.categories" :key="cat.id" class="item-row">
+              <SettingsItem
+                  v-for="cat in financeStore.categories"
+                  :key="cat.id"
+                  @delete="removeCategory(cat.id)"
+              >
                 <span>{{ cat.name }}</span>
-                <button class="delete-btn" @click="removeCategory(cat.id)">[ X ]</button>
-              </div>
+              </SettingsItem>
             </div>
           </div>
         </div>
@@ -81,6 +87,7 @@ import BaseLayout from '../layouts/BaseLayout.vue'
 import {useFinanceStore} from '../stores/finance'
 import {useAuthStore} from '../stores/auth'
 import {financeApi} from '../api'
+import SettingsItem from "@/components/SettingsItem.vue";
 
 const financeStore = useFinanceStore()
 const authStore = useAuthStore()
